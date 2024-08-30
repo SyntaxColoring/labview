@@ -4,11 +4,20 @@ import "./App.css";
 import DefinitionInput from "./DefinitionInput";
 import { labware, Labware } from "./opentrons/labware";
 import { ZodIssue } from "zod";
+import Viewport from "./Viewport";
+
+import * as exampleLabware from "./opentrons/exampleLabware.json";
 
 export default function App() {
-  const [input, setInput] = React.useState<string>("");
-  const [error, setError] = React.useState<string | null>(null);
-  const [definition, setDefinition] = React.useState<Labware | null>(null);
+  const [input, setInput] = React.useState<string>(
+    JSON.stringify(exampleLabware, null, 2),
+  );
+
+  const parseResult = input.trim() === "" ? null : parseDefinition(input);
+  const errorMessage =
+    parseResult?.type === "error" ? parseResult.message : null;
+  const definition =
+    parseResult?.type === "success" ? parseResult.result : null;
 
   return (
     <>
@@ -17,16 +26,8 @@ export default function App() {
         content={input}
         onChange={(newContent) => {
           setInput(newContent);
-          const parseResult = parseDefinition(newContent);
-          if (parseResult.type === "success") {
-            setDefinition(parseResult.result);
-            setError(null);
-          } else {
-            setDefinition(null);
-            setError(parseResult.message);
-          }
         }}
-        error={error}
+        error={errorMessage}
       />
     </>
   );
