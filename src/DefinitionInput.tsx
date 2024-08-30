@@ -14,9 +14,8 @@ export default function DefinitionInput(props: Props): React.JSX.Element {
         className={classes.input}
         placeholder="Paste a labware definition here."
         onChange={(e) => props.onChange(e.target.value)}
-      >
-        {props.content}
-      </textarea>
+        value={props.content}
+      />
       {props.error && <div className={classes.error}>{props.error}</div>}
     </div>
   );

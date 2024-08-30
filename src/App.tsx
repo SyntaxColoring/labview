@@ -29,6 +29,7 @@ export default function App() {
         }}
         error={errorMessage}
       />
+      <Viewport definition={definition} />
     </>
   );
 }
