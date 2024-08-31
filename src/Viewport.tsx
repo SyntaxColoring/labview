@@ -17,6 +17,10 @@ export default function Viewport({
 }: {
 	definition: Labware | null;
 }): React.JSX.Element {
+	const orbitCenterX = (definition?.dimensions.xDimension ?? 0) / 2;
+	const orbitCenterY = (definition?.dimensions.yDimension ?? 0) / 2;
+	const orbitCenterZ = (definition?.dimensions.zDimension ?? 0) / 2;
+
 	return (
 		<div className={classes.container}>
 			{/* TODO: Figure out how to get OrthographicCamera to work. */}
@@ -29,13 +33,13 @@ export default function Viewport({
 					bottom={-100}
 					near={0}
 					far={200}
-					position={[0, -100, 0]}
+					position={[orbitCenterX + 50, orbitCenterY - 50, orbitCenterZ + 50]}
 					up={[0, 0, 1]}
 				/>
 				{definition !== null && <LabwareBoundingBox definition={definition} />}
 				<ambientLight intensity={0.5} />
 				<directionalLight position={[5, 5, 5]} />
-				<OrbitControls />
+				<OrbitControls target={[orbitCenterX, orbitCenterY, orbitCenterZ]} />
 			</Canvas>
 		</div>
 	);
