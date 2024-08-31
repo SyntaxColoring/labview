@@ -33,7 +33,7 @@ export default function Viewport({
 					bottom={-100}
 					near={0}
 					far={200}
-					position={[orbitCenterX + 50, orbitCenterY - 50, orbitCenterZ + 50]}
+					position={[orbitCenterX - 50, orbitCenterY - 50, orbitCenterZ + 50]}
 					up={[0, 0, 1]}
 				/>
 				{definition !== null && <LabwareBoundingBox definition={definition} />}
