@@ -45,14 +45,34 @@ export default function Viewport({
 	);
 }
 
-function LabwareBoundingBox({ definition }: { definition: Labware }) {
+function LabwareBoundingBox({
+	definition,
+}: {
+	definition: Labware;
+}): React.JSX.Element {
 	const { xDimension, yDimension, zDimension } = definition.dimensions;
+
 	return (
-		<Box
-			args={[xDimension, yDimension, zDimension]}
-			position={[xDimension / 2, yDimension / 2, zDimension / 2]}
-		>
-			<meshPhysicalMaterial color="red" transparent opacity={0.5} />
-		</Box>
+		<>
+			<Box
+				args={[xDimension, yDimension, zDimension]}
+				position={[xDimension / 2, yDimension / 2, zDimension / 2]}
+			>
+				<meshPhysicalMaterial color="red" transparent opacity={0.5} />
+			</Box>
+			{Object.entries(definition.wells).map(([wellName, well]) => {
+				const geometry =
+					well.shape === "circular" ? (
+						<circleGeometry args={[well.diameter / 2, 32]} />
+					) : (
+						<planeGeometry args={[well.xDimension, well.yDimension]} />
+					);
+				return (
+					<mesh key={wellName} position={[well.x, well.y, well.z + well.depth]}>
+						{geometry}
+					</mesh>
+				);
+			})}
+		</>
 	);
 }
