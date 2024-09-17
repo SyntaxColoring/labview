@@ -11,15 +11,17 @@ import {
 
 import { Labware } from "./opentrons/labware";
 import classes from "./Viewport.module.css";
+import RectangularFrustumGeometry from "./3d/RectangularFrustumGeometry";
 
 export default function Viewport({
 	definition,
 }: {
 	definition: Labware | null;
 }): React.JSX.Element {
-	const orbitCenterX = (definition?.dimensions.xDimension ?? 0) / 2;
-	const orbitCenterY = (definition?.dimensions.yDimension ?? 0) / 2;
-	const orbitCenterZ = (definition?.dimensions.zDimension ?? 0) / 2;
+	const [orbitCenterX, orbitCenterY, orbitCenterZ] = [0, 0, 0];
+	// const orbitCenterX = (definition?.dimensions.xDimension ?? 0) / 2;
+	// const orbitCenterY = (definition?.dimensions.yDimension ?? 0) / 2;
+	// const orbitCenterZ = (definition?.dimensions.zDimension ?? 0) / 2;
 
 	return (
 		<div className={classes.container}>
@@ -36,7 +38,15 @@ export default function Viewport({
 					position={[orbitCenterX - 50, orbitCenterY - 50, orbitCenterZ + 50]}
 					up={[0, 0, 1]}
 				/>
-				{definition !== null && <LabwareBoundingBox definition={definition} />}
+				{/*{definition !== null && <LabwareBoundingBox definition={definition} />}*/}
+				<RectangularFrustumGeometry
+					bottomXDimension={20}
+					bottomYDimension={20}
+					topYDimension={10}
+					topXDimension={10}
+					zDimension={20}
+					withFloor={false}
+				/>
 				<ambientLight intensity={0.5} />
 				<directionalLight position={[5, 5, 5]} />
 				<OrbitControls target={[orbitCenterX, orbitCenterY, orbitCenterZ]} />
