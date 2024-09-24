@@ -1,0 +1,33 @@
+{
+  "frusta": [
+    {
+      "topHeight": 31,
+      "geometry": {
+        "shape": "rectangular",
+        "xDimension": 9,
+        "yDimension": 71
+      }
+    },
+    {
+      "topHeight": 30,
+      "geometry": {
+        "shape": "rectangular",
+        "xDimension": 8,
+        "yDimension": 70
+      }
+    },
+    {
+      "topHeight": 5,
+      "geometry": {
+        "shape": "rectangular",
+        "xDimension": 8,
+        "yDimension": 70
+      }
+    }
+  ],
+  "bottomShape": {
+    "shape": "rectangular",
+    "xDimension": 2,
+    "yDimension": 50
+  }
+}

@@ -6,12 +6,12 @@ import { labware, Labware } from "./opentrons/labware";
 import { ZodIssue } from "zod";
 import Viewport from "./Viewport";
 
-import exampleLabware from "./opentrons/exampleLabware.json";
+import exampleInput from "./opentrons/exampleWellGeometry.json";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
 export default function App() {
   const [input, setInput] = React.useState<string>(
-    JSON.stringify(exampleLabware, null, 2),
+    JSON.stringify(exampleInput, null, 2),
   );
 
   const parseResult = input.trim() === "" ? null : parseDefinition(input);
@@ -46,7 +46,9 @@ export default function App() {
 
 function parseDefinition(
   rawInput: string,
-): { type: "success"; result: Labware } | { type: "error"; message: string } {
+):
+  | { type: "success"; result: Labware["innerLabwareGeometry"] }
+  | { type: "error"; message: string } {
   let parsedJSON: string;
   try {
     parsedJSON = JSON.parse(rawInput);
@@ -54,7 +56,7 @@ function parseDefinition(
     return { type: "error", message: e instanceof Error ? e.message : "" };
   }
 
-  const result = labware.safeParse(parsedJSON);
+  const result = labware.shape.innerLabwareGeometry.safeParse(parsedJSON);
 
   if (result.success) {
     return { type: "success", result: result.data };
