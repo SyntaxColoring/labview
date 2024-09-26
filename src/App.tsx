@@ -6,7 +6,7 @@ import { labware, Labware } from "./opentrons/labware";
 import { ZodIssue } from "zod";
 import Viewport from "./Viewport";
 
-import * as exampleLabware from "./opentrons/exampleLabware.json";
+import exampleLabware from "./opentrons/exampleLabware.json";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
 export default function App() {
