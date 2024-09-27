@@ -1,12 +1,13 @@
 import React from "react";
 
-import "./App.css";
+import classes from "./App.module.css";
 import DefinitionInput from "./DefinitionInput";
 import { labware, Labware } from "./opentrons/labware";
 import { ZodIssue } from "zod";
 import Viewport from "./Viewport";
 
 import * as exampleLabware from "./opentrons/exampleLabware.json";
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
 export default function App() {
   const [input, setInput] = React.useState<string>(
@@ -20,17 +21,26 @@ export default function App() {
     parseResult?.type === "success" ? parseResult.result : null;
 
   return (
-    <>
-      <h1>Labware Thing</h1>
-      <DefinitionInput
-        content={input}
-        onChange={(newContent) => {
-          setInput(newContent);
-        }}
-        error={errorMessage}
-      />
-      <Viewport definition={definition} />
-    </>
+    <div className={classes.appContainer}>
+      <div className={classes.header}>
+        <h1 className={classes.pageTitle}>Labware Thing</h1>
+      </div>
+      <PanelGroup direction="horizontal">
+        <Panel>
+          <DefinitionInput
+            content={input}
+            onChange={(newContent) => {
+              setInput(newContent);
+            }}
+            error={errorMessage}
+          />
+        </Panel>
+        <PanelResizeHandle className={classes.resizeHandle} />
+        <Panel>
+          <Viewport definition={definition} />
+        </Panel>
+      </PanelGroup>
+    </div>
   );
 }
 

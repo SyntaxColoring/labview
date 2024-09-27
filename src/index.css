@@ -1,4 +1,19 @@
-:root {
-  font-size: 18px;
+/* Global CSS. */
+
+html {
+  font-size: 14px;
   font-family: sans-serif;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.noscript-message {
+  margin: 1em;
+  text-align: center;
 }

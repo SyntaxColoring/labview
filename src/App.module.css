@@ -1,0 +1,33 @@
+.appContainer {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+.header {
+  padding: 1em;
+}
+
+.pageTitle {
+  font-size: 150%;
+  margin: 0;
+}
+
+.resizeHandle {
+  width: 25px;
+  position: relative;
+}
+
+.resizeHandle::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(50% - 2.5px);
+  right: calc(50% - 2.5px);
+  background-color: lightgray;
+}
+
+.resizeHandle[data-resize-handle-active]::before {
+  background-color: darkcyan;
+}
