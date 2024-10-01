@@ -1,18 +1,12 @@
 import React from "react";
 import { Canvas } from "@react-three/fiber";
-import {
-	PerspectiveCamera,
-	OrbitControls,
-	OrthographicCamera,
-	Outlines,
-	Box,
-	Grid,
-} from "@react-three/drei";
+import { OrbitControls, OrthographicCamera, Box } from "@react-three/drei";
 
 import { Labware } from "./opentrons/labware";
 import classes from "./Viewport.module.css";
 import RectangularFrustumGeometry from "./3d/RectangularFrustumGeometry";
 
+// @ts-expect-error
 export default function Viewport({
 	definition,
 }: {
@@ -55,6 +49,7 @@ export default function Viewport({
 	);
 }
 
+// @ts-expect-error
 function LabwareBoundingBox({
 	definition,
 }: {
