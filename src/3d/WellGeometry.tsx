@@ -1,4 +1,4 @@
-import { Edges } from "@react-three/drei";
+import { Edges, EdgesRef } from "@react-three/drei";
 import React from "react";
 import { DoubleSide, Shape as ThreeShape } from "three";
 import { Labware } from "../opentrons/labware";
@@ -74,6 +74,7 @@ function RectangularFrustum({
   const x0y1z1 = [-topXDimension / 2, topYDimension / 2, zDimension];
   const x1y1z1 = [topXDimension / 2, topYDimension / 2, zDimension];
 
+  // TODO: useMemo me.
   const triangles = [
     // x0 wall:
     [x0y0z0, x0y0z1, x0y1z1],
@@ -104,8 +105,12 @@ function RectangularFrustum({
         e.stopPropagation();
       }}
     >
-      <bufferGeometry onUpdate={(self) => self.computeVertexNormals()}>
+      <bufferGeometry onUpdate={(self) => self.computeVertexNormals()} attri>
         <bufferAttribute
+          onUpdate={
+            (self) => {
+              self.needsUpdate = true;
+          }}
           attach="attributes-position"
           array={buffer}
           count={buffer.length / 3}
@@ -117,6 +122,9 @@ function RectangularFrustum({
         opacity={0.7}
         color={highlighted ? "cyan" : "red"}
         side={DoubleSide}
+        polygonOffset
+        polygonOffsetFactor={1}
+        polygonOffsetUnits={1}
       />
       <Edges />
     </mesh>
@@ -144,6 +152,9 @@ function RectangularFloor({
         opacity={0.7}
         color="red"
         side={DoubleSide}
+        polygonOffset
+        polygonOffsetFactor={1}
+        polygonOffsetUnits={1}
       />
       <Edges />
     </mesh>
