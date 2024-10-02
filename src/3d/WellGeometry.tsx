@@ -89,8 +89,21 @@ function RectangularFrustum({
     [x0y1z0, x0y1z1, x1y1z1],
   ];
   const buffer = new Float32Array(triangles.flat().flat());
+
+  const [highlighted, setHighlighted] = React.useState(false);
+
   return (
-    <mesh position={position}>
+    <mesh
+      position={position}
+      onPointerEnter={(e) => {
+        setHighlighted(true);
+        e.stopPropagation();
+      }}
+      onPointerLeave={(e) => {
+        setHighlighted(false);
+        e.stopPropagation();
+      }}
+    >
       <bufferGeometry onUpdate={(self) => self.computeVertexNormals()}>
         <bufferAttribute
           attach="attributes-position"
@@ -102,7 +115,7 @@ function RectangularFrustum({
       <meshStandardMaterial
         transparent
         opacity={0.7}
-        color="red"
+        color={highlighted ? "cyan" : "red"}
         side={DoubleSide}
       />
       <Edges />
