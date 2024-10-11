@@ -117,6 +117,9 @@ function RectangularFrustum({
         opacity={0.7}
         color={highlighted ? "cyan" : "red"}
         side={DoubleSide}
+        polygonOffset
+        polygonOffsetFactor={1}
+        polygonOffsetUnits={1}
       />
       <Edges />
     </mesh>
@@ -144,6 +147,9 @@ function RectangularFloor({
         opacity={0.7}
         color="red"
         side={DoubleSide}
+        polygonOffset
+        polygonOffsetFactor={1}
+        polygonOffsetUnits={1}
       />
       <Edges />
     </mesh>
