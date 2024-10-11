@@ -74,6 +74,7 @@ function RectangularFrustum({
   const x0y1z1 = [-topXDimension / 2, topYDimension / 2, zDimension];
   const x1y1z1 = [topXDimension / 2, topYDimension / 2, zDimension];
 
+  // TODO: useMemo me.
   const triangles = [
     // x0 wall:
     [x0y0z0, x0y0z1, x0y1z1],
