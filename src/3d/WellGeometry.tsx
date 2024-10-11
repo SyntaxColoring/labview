@@ -107,6 +107,9 @@ function RectangularFrustum({
     >
       <bufferGeometry onUpdate={(self) => self.computeVertexNormals()}>
         <bufferAttribute
+          onUpdate={(self) => {
+            self.needsUpdate = true;
+          }}
           attach="attributes-position"
           array={buffer}
           count={buffer.length / 3}
