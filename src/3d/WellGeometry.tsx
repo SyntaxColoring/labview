@@ -1,8 +1,10 @@
-import { Edges } from "@react-three/drei";
+import { Edges, Html, Line } from "@react-three/drei";
 import React from "react";
 import { DoubleSide, Shape as ThreeShape } from "three";
 import { Labware } from "../opentrons/labware";
 import { MeshProps } from "@react-three/fiber";
+
+import classes from "./WellGeometry.module.css";
 
 export type WellGeometry = NonNullable<Labware["innerLabwareGeometry"]>;
 
@@ -65,14 +67,46 @@ function RectangularFrustum({
   zDimension: number;
   position: MeshProps["position"];
 }): React.JSX.Element {
-  const x0y0z0 = [-bottomXDimension / 2, -bottomYDimension / 2, 0];
-  const x1y0z0 = [bottomXDimension / 2, -bottomYDimension / 2, 0];
-  const x0y1z0 = [-bottomXDimension / 2, bottomYDimension / 2, 0];
-  const x1y1z0 = [bottomXDimension / 2, bottomYDimension / 2, 0];
-  const x0y0z1 = [-topXDimension / 2, -topYDimension / 2, zDimension];
-  const x1y0z1 = [topXDimension / 2, -topYDimension / 2, zDimension];
-  const x0y1z1 = [-topXDimension / 2, topYDimension / 2, zDimension];
-  const x1y1z1 = [topXDimension / 2, topYDimension / 2, zDimension];
+  const x0y0z0: [number, number, number] = [
+    -bottomXDimension / 2,
+    -bottomYDimension / 2,
+    0,
+  ];
+  const x1y0z0: [number, number, number] = [
+    bottomXDimension / 2,
+    -bottomYDimension / 2,
+    0,
+  ];
+  const x0y1z0: [number, number, number] = [
+    -bottomXDimension / 2,
+    bottomYDimension / 2,
+    0,
+  ];
+  const x1y1z0: [number, number, number] = [
+    bottomXDimension / 2,
+    bottomYDimension / 2,
+    0,
+  ];
+  const x0y0z1: [number, number, number] = [
+    -topXDimension / 2,
+    -topYDimension / 2,
+    zDimension,
+  ];
+  const x1y0z1: [number, number, number] = [
+    topXDimension / 2,
+    -topYDimension / 2,
+    zDimension,
+  ];
+  const x0y1z1: [number, number, number] = [
+    -topXDimension / 2,
+    topYDimension / 2,
+    zDimension,
+  ];
+  const x1y1z1: [number, number, number] = [
+    topXDimension / 2,
+    topYDimension / 2,
+    zDimension,
+  ];
 
   // TODO: useMemo me.
   const triangles = [
@@ -90,6 +124,22 @@ function RectangularFrustum({
     [x0y1z0, x0y1z1, x1y1z1],
   ];
   const buffer = new Float32Array(triangles.flat().flat());
+
+  const bottomXDimensionLabelPos = midpoint(x0y0z0, x1y0z0);
+  const bottomYDimensionLabelPos = midpoint(x0y0z0, x0y1z0);
+  const topXDimensionLabelPos = midpoint(x0y0z1, x1y0z1);
+  const topYDimensionLabelPos = midpoint(x0y0z1, x0y1z1);
+
+  const needsExtraLineForZDimension =
+    bottomXDimension !== topXDimension || bottomYDimension !== topYDimension;
+  const zDimensionExtraLinePoints: [number, number, number][] = [
+    [x0y0z1[0], x0y0z1[1], x0y0z0[2]],
+    x0y0z1,
+  ];
+  const zDimensionLabelPos = midpoint(
+    zDimensionExtraLinePoints[0],
+    zDimensionExtraLinePoints[1],
+  );
 
   const [highlighted, setHighlighted] = React.useState(false);
 
@@ -126,6 +176,45 @@ function RectangularFrustum({
         polygonOffsetUnits={1}
       />
       <Edges />
+      {highlighted && (
+        <group>
+          <Html
+            className={classes.xLabel}
+            position={bottomXDimensionLabelPos}
+            center
+          >
+            {bottomXDimension}
+          </Html>
+          <Html
+            className={classes.yLabel}
+            position={bottomYDimensionLabelPos}
+            center
+          >
+            {bottomYDimension}
+          </Html>
+          <Html
+            className={classes.xLabel}
+            position={topXDimensionLabelPos}
+            center
+          >
+            {topXDimension}
+          </Html>
+          <Html
+            className={classes.yLabel}
+            position={topYDimensionLabelPos}
+            center
+          >
+            {topYDimension}
+          </Html>
+
+          {needsExtraLineForZDimension && (
+            <Line color="black" points={zDimensionExtraLinePoints} />
+          )}
+          <Html className={classes.zLabel} position={zDimensionLabelPos} center>
+            {zDimension}
+          </Html>
+        </group>
+      )}
     </mesh>
   );
 }
@@ -158,4 +247,8 @@ function RectangularFloor({
       <Edges />
     </mesh>
   );
+}
+
+function midpoint(a: number[], b: number[]): [number, number, number] {
+  return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2];
 }

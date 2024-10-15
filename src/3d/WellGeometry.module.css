@@ -1,0 +1,24 @@
+.xLabel,
+.yLabel,
+.zLabel {
+  display: block;
+  line-height: 1cap;
+
+  padding: 3px;
+  border-radius: 3px;
+  background-color: rgba(100%, 100%, 100%, 0.9);
+
+  pointer-events: none;
+}
+
+.xLabel {
+  color: red;
+}
+
+.yLabel {
+  color: green;
+}
+
+.zLabel {
+  color: blue;
+}
