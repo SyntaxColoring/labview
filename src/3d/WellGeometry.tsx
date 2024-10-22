@@ -138,6 +138,19 @@ function CuboidalFrustum({
 
   const [highlighted, setHighlighted] = React.useState(false);
 
+  const [propUpdateCount, setPropUpdateCount] = React.useState(0);
+
+  React.useEffect(() => {
+    setPropUpdateCount((count) => count + 1);
+  }, [
+    topXDimension,
+    topYDimension,
+    bottomXDimension,
+    bottomYDimension,
+    zDimension,
+    position,
+  ]);
+
   return (
     <mesh
       position={position}
@@ -170,7 +183,13 @@ function CuboidalFrustum({
         polygonOffsetFactor={1}
         polygonOffsetUnits={1}
       />
-      <Edges />
+      <Edges
+        // Edges only computes geometry when it's first constructed (mounted? attached?),
+        // doesn't update itself when the underlying geometry changes, and doesn't
+        // expose any way to manually trigger a recomputation. So, to keep it up to date,
+        // we do this `key` hack to create a new one any time any of our props change.
+        key={propUpdateCount}
+      />
       {highlighted && (
         <group>
           <Html
