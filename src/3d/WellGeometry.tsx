@@ -8,7 +8,7 @@ import classes from "./WellGeometry.module.css";
 
 // TODO: Come up with a way to resolve the "geometry" term overloading between Opentrons
 // labware definitions and three.js.
-export default function RectangularWellGeometry({
+export default function RectangularWell({
   wellGeometry,
 }: {
   wellGeometry: InnerLabwareGeometry;
@@ -30,7 +30,7 @@ export default function RectangularWellGeometry({
       )}
       {sectionsBottomToTop.map((section, index) => {
         return section.shape === "cuboidal" ? (
-          <RectangularFrustum
+          <CuboidalFrustum
             key={index}
             topXDimension={section.topXDimension}
             topYDimension={section.topYDimension}
@@ -47,7 +47,7 @@ export default function RectangularWellGeometry({
 }
 
 // Return a frustum whose bottom is centered on the given position.
-function RectangularFrustum({
+function CuboidalFrustum({
   topXDimension,
   topYDimension,
   bottomXDimension,

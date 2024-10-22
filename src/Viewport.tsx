@@ -4,7 +4,7 @@ import { OrbitControls, OrthographicCamera } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 
 import type { InnerLabwareGeometry } from "./opentrons/labware";
-import RectangularWellGeometry from "./3d/WellGeometry";
+import RectangularWell from "./3d/WellGeometry";
 
 import classes from "./Viewport.module.css";
 
@@ -29,7 +29,7 @@ export default function Viewport({
           position={[orbitCenterX - 10, orbitCenterY - 50, orbitCenterZ + 25]}
           up={[0, 0, 1]}
         />
-        {definition && <RectangularWellGeometry wellGeometry={definition} />}
+        {definition && <RectangularWell wellGeometry={definition} />}
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 5, 5]} />
         <OrbitControls target={[orbitCenterX, orbitCenterY, orbitCenterZ]} />
