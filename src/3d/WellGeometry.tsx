@@ -1,49 +1,44 @@
 import { Edges, Html, Line } from "@react-three/drei";
 import React from "react";
 import { DoubleSide, Shape as ThreeShape } from "three";
-import { Labware } from "../opentrons/labware";
+import type { InnerLabwareGeometry } from "../opentrons/labware";
 import { MeshProps } from "@react-three/fiber";
 
 import classes from "./WellGeometry.module.css";
-
-export type WellGeometry = NonNullable<Labware["innerLabwareGeometry"]>;
 
 // TODO: Come up with a way to resolve the "geometry" term overloading between Opentrons
 // labware definitions and three.js.
 export default function RectangularWellGeometry({
   wellGeometry,
 }: {
-  wellGeometry: WellGeometry;
+  wellGeometry: InnerLabwareGeometry;
 }): React.JSX.Element {
-  const { bottomShape, frusta: unsortedFrusta } = wellGeometry;
-  const frustaBottomToTop = unsortedFrusta.sort(
+  const { sections: unsortedSections } = wellGeometry;
+  const sectionsBottomToTop = unsortedSections.sort(
     (a, b) => a.topHeight - b.topHeight,
   );
+  const bottomSection: (typeof sectionsBottomToTop)[number] | undefined =
+    sectionsBottomToTop[0];
 
   return (
     <group>
-      {bottomShape.shape === "rectangular" && (
+      {bottomSection?.shape === "cuboidal" && (
         <RectangularFloor
-          xDimension={bottomShape.xDimension}
-          yDimension={bottomShape.yDimension}
+          xDimension={bottomSection.bottomXDimension}
+          yDimension={bottomSection.bottomYDimension}
         />
       )}
-      {frustaBottomToTop.map((frustum, index) => {
-        const bottomZ =
-          index === 0 ? 0 : frustaBottomToTop[index - 1].topHeight;
-        const bottomCrossSection =
-          index === 0 ? bottomShape : frustaBottomToTop[index - 1].geometry;
-
-        return bottomCrossSection.shape === "rectangular" &&
-          frustum.geometry.shape === "rectangular" ? (
+      {sectionsBottomToTop.map((section, index) => {
+        return section.shape === "cuboidal" ? (
           <RectangularFrustum
             key={index}
-            topXDimension={frustum.geometry.xDimension}
-            topYDimension={frustum.geometry.yDimension}
-            bottomXDimension={bottomCrossSection.xDimension}
-            bottomYDimension={bottomCrossSection.yDimension}
-            zDimension={frustum.topHeight - bottomZ}
-            position={[0, 0, bottomZ]}
+            topXDimension={section.topXDimension}
+            topYDimension={section.topYDimension}
+            bottomXDimension={section.bottomXDimension}
+            bottomYDimension={section.bottomYDimension}
+            // TODO: This may invite rounding errors. Convert to top/bottom z-coord pair.
+            zDimension={section.topHeight - section.bottomHeight}
+            position={[0, 0, section.bottomHeight]}
           />
         ) : null;
       })}

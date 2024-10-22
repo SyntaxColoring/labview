@@ -2,12 +2,15 @@ import React from "react";
 
 import classes from "./App.module.css";
 import DefinitionInput from "./DefinitionInput";
-import { labware, Labware } from "./opentrons/labware";
 import { ZodIssue } from "zod";
 import Viewport from "./Viewport";
 
 import exampleInput from "./opentrons/exampleWellGeometry.json";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import {
+  type InnerLabwareGeometry,
+  innerLabwareGeometry,
+} from "./opentrons/labware";
 
 export default function App() {
   const [input, setInput] = React.useState<string>(
@@ -47,16 +50,16 @@ export default function App() {
 function parseDefinition(
   rawInput: string,
 ):
-  | { type: "success"; result: Labware["innerLabwareGeometry"] }
+  | { type: "success"; result: InnerLabwareGeometry }
   | { type: "error"; message: string } {
-  let parsedJSON: string;
+  let parsedJSON: unknown;
   try {
     parsedJSON = JSON.parse(rawInput);
   } catch (e) {
     return { type: "error", message: e instanceof Error ? e.message : "" };
   }
 
-  const result = labware.shape.innerLabwareGeometry.safeParse(parsedJSON);
+  const result = innerLabwareGeometry.safeParse(parsedJSON);
 
   if (result.success) {
     return { type: "success", result: result.data };

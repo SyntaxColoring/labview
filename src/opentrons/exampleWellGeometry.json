@@ -1,33 +1,31 @@
 {
-  "frusta": [
+  "sections": [
     {
+      "shape": "cuboidal",
       "topHeight": 31,
-      "geometry": {
-        "shape": "rectangular",
-        "xDimension": 9,
-        "yDimension": 71
-      }
+      "topXDimension": 9,
+      "topYDimension": 71,
+      "bottomHeight": 30,
+      "bottomXDimension": 8,
+      "bottomYDimension": 70
     },
     {
+      "shape": "cuboidal",
       "topHeight": 30,
-      "geometry": {
-        "shape": "rectangular",
-        "xDimension": 8,
-        "yDimension": 70
-      }
+      "topXDimension": 8,
+      "topYDimension": 70,
+      "bottomHeight": 5,
+      "bottomXDimension": 8,
+      "bottomYDimension": 70
     },
     {
+      "shape": "cuboidal",
       "topHeight": 5,
-      "geometry": {
-        "shape": "rectangular",
-        "xDimension": 8,
-        "yDimension": 70
-      }
+      "topXDimension": 8,
+      "topYDimension": 70,
+      "bottomHeight": 0,
+      "bottomXDimension": 2,
+      "bottomYDimension": 50
     }
-  ],
-  "bottomShape": {
-    "shape": "rectangular",
-    "xDimension": 2,
-    "yDimension": 50
-  }
+  ]
 }

@@ -1,73 +1,48 @@
-// Minimal schema validation and TypeScript bindings for the labware definition schema.
-// TODO: Figure out a way to install opentrons-shared-data in this project and use its bindings.
+/*
+Minimal schema validation and TypeScript bindings for Opentrons labware definitions.
+(Or parts of Opentrons labware definitions, anyway.)
+
+Unfortunately, we have to hand-write our own Zod bindings, instead of using something
+like Ajv to directly validate against the Opentrons JSON Schema. Because JSON Schema
+has no discriminated unions, the error messages are unusably bad for interactive editing.
+
+Most recently updated for this upstream revision:
+https://github.com/Opentrons/opentrons/blob/44e030b5da88d4edb54525ca1a35b49c461a3a14/shared-data/labware/schemas/3.json
+*/
 
 import { z } from "zod";
 
-const wellCommon = z.object({
-  depth: z.number(),
-  x: z.number(),
-  y: z.number(),
-  z: z.number(),
-  geometryDefinitionId: z.string().nullable().optional(),
-});
-
-const rectangularWell = wellCommon.extend({
-  shape: z.literal("rectangular"),
-  xDimension: z.number(),
-  yDimension: z.number(),
-});
-
-const circularWell = wellCommon.extend({
-  shape: z.literal("circular"),
-  diameter: z.number(),
-  depth: z.number(),
-});
-
-const well = z.discriminatedUnion("shape", [rectangularWell, circularWell]);
-
-const circularCrossSection = z.object({
-  shape: z.literal("circular"),
-  diameter: z.number(),
-});
-
-const rectangularCrossSection = z.object({
-  shape: z.literal("rectangular"),
-  xDimension: z.number(),
-  yDimension: z.number(),
-});
-
-const sphericalSegment = z.object({
+const spherical = z.object({
   shape: z.literal("spherical"),
   radiusOfCurvature: z.number(),
-  depth: z.number(),
-});
-
-const boundedSection = z.object({
-  geometry: z.discriminatedUnion("shape", [
-    circularCrossSection,
-    rectangularCrossSection,
-  ]),
   topHeight: z.number(),
+  bottomHeight: z.number(),
 });
 
-export const labware = z.object({
-  dimensions: z.object({
-    xDimension: z.number(),
-    yDimension: z.number(),
-    zDimension: z.number(),
-  }),
-  wells: z.record(z.string(), well),
-  innerLabwareGeometry: z
-    .object({
-      frusta: z.array(boundedSection),
-      bottomShape: z.discriminatedUnion("shape", [
-        circularCrossSection,
-        rectangularCrossSection,
-        sphericalSegment,
-      ]),
-    })
-    .nullable()
-    .optional(),
+const conical = z.object({
+  shape: z.literal("conical"),
+  bottomDiameter: z.number(),
+  topDiameter: z.number(),
+  topHeight: z.number(),
+  bottomHeight: z.number(),
 });
 
-export type Labware = z.infer<typeof labware>;
+const cuboidal = z.object({
+  shape: z.literal("cuboidal"),
+  bottomXDimension: z.number(),
+  bottomYDimension: z.number(),
+  topXDimension: z.number(),
+  topYDimension: z.number(),
+  topHeight: z.number(),
+  bottomHeight: z.number(),
+});
+
+// TODO: Add squaredcone and roundedcuboid.
+
+export const innerLabwareGeometry = z.object({
+  sections: z.array(
+    z.discriminatedUnion("shape", [spherical, conical, cuboidal]),
+  ),
+});
+
+export type InnerLabwareGeometry = z.infer<typeof innerLabwareGeometry>;

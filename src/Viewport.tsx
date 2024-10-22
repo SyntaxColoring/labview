@@ -3,8 +3,7 @@ import React from "react";
 import { OrbitControls, OrthographicCamera } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 
-import { Labware } from "./opentrons/labware";
-
+import type { InnerLabwareGeometry } from "./opentrons/labware";
 import RectangularWellGeometry from "./3d/WellGeometry";
 
 import classes from "./Viewport.module.css";
@@ -12,7 +11,7 @@ import classes from "./Viewport.module.css";
 export default function Viewport({
   definition,
 }: {
-  definition: Labware["innerLabwareGeometry"] | null;
+  definition: InnerLabwareGeometry | null;
 }): React.JSX.Element {
   const [orbitCenterX, orbitCenterY, orbitCenterZ] = [0, 0, 0];
 
